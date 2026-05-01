@@ -1,8 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { tempAuth } from '@lib/store/tempAuth';
+import { useAuthStore, selectIsAuthenticated } from '@lib/store/authStore';
 
 export default function PublicOnlyRoute() {
-  if (tempAuth.isAuthenticated) {
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+
+  if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
   return <Outlet />;
