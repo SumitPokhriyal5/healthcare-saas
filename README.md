@@ -14,6 +14,24 @@ A B2B healthcare frontend: authentication, dashboard, analytics, and a patient m
 - **Performance** — Routes are lazy-loaded and split per-page; vendor chunks (React, Recharts, Firebase) are extracted; patient list is memoized.
 - **Accessibility** — Skip-to-content link, focus-visible rings, focus restoration on dialog close, `aria-live` result announcements, and reduced-motion support.
 
+
+## Screenshots
+### Dashboard
+<img width="1728" height="958" alt="Image" src="https://github.com/user-attachments/assets/aeb77af8-89e8-4522-8a8b-bef251ec3337" />
+
+### Analytics
+<img width="1728" height="958" alt="Image" src="https://github.com/user-attachments/assets/4d35ffb6-0dea-4571-a4a8-658950d2b401" />
+
+### Patients
+<img width="1728" height="958" alt="Image" src="https://github.com/user-attachments/assets/7c1e0826-13ab-404b-98ac-ddecd52a6aa6" />
+
+### Login
+<img width="1728" height="958" alt="Image" src="https://github.com/user-attachments/assets/fbfdb9b3-779b-4410-81b0-1e6056d6a599" />
+
+### Sign up
+<img width="1728" height="958" alt="Image" src="https://github.com/user-attachments/assets/232e4507-33b6-4daf-a71c-59f319085c2d" />
+
+
 ## Tech stack
 
 - **React 19** + **TypeScript** + **Vite**
