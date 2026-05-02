@@ -1,6 +1,9 @@
 import LoginForm from './LoginForm';
+import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
 export default function LoginPage() {
+  useDocumentTitle('Sign in');
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
       <div className="w-full max-w-md">

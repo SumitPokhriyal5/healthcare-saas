@@ -9,6 +9,7 @@ import { PatientsFilterBar } from './PatientsFilterBar';
 import { PatientCard } from './PatientCard';
 import { PatientListRow } from './PatientListRow';
 import { PatientDetailDrawer } from './PatientDetailDrawer';
+import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
 export default function PatientsPage() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function PatientsPage() {
   const allPatients = usePatientsStore((s) => s.patients);
   const filters = usePatientsStore((s) => s.filters);
   const viewMode = useUIStore((s) => s.patientsViewMode);
+  useDocumentTitle('Patients');
 
   useEffect(() => {
     setPatients(mockPatients);
@@ -37,7 +39,15 @@ export default function PatientsPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Patients" subtitle={`${filtered.length} of ${allPatients.length} shown`} />
+      <div>
+        <PageHeader
+          title="Patients"
+          subtitle={`${filtered.length} of ${allPatients.length} shown`}
+        />
+        <p role="status" aria-live="polite" className="sr-only">
+          {filtered.length} of {allPatients.length} patients shown
+        </p>
+      </div>
 
       <PatientsFilterBar />
 

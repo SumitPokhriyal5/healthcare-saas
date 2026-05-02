@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { navItems } from './navigation';
+import { useEffect } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -8,6 +9,24 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    if (window.innerWidth >= 1024) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
   return (
     <>
       {isOpen && (
@@ -41,7 +60,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
+        <nav aria-label="Main" className="flex-1 space-y-1 px-3 py-4">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -49,14 +68,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 key={item.to}
                 to={item.to}
                 onClick={onClose}
+                end={item.to === '/dashboard'}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                     isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
                   }`
                 }
               >
-                <Icon size={18} />
-                {item.label}
+                {({ isActive }) => (
+                  <>
+                    <Icon size={18} aria-hidden="true" />
+                    <span>{item.label}</span>
+                    {isActive && <span className="sr-only">(current page)</span>}
+                  </>
+                )}
               </NavLink>
             );
           })}

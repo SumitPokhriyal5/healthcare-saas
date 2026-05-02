@@ -12,4 +12,18 @@
   body {
     @apply bg-slate-50 text-slate-900 antialiased;
   }
+
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    @apply rounded outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
 }

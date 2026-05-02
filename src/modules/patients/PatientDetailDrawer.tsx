@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X, Calendar, Stethoscope, UserCircle, Phone, Mail } from 'lucide-react';
 import { Badge, Button } from '@shared/components';
 import { getInitials } from '@shared/utils/initials';
@@ -11,13 +11,28 @@ interface Props {
 }
 
 export function PatientDetailDrawer({ patient, onClose }: Props) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     if (!patient) return;
+
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
+    };
   }, [patient, onClose]);
 
   if (!patient) return null;
@@ -42,6 +57,7 @@ export function PatientDetailDrawer({ patient, onClose }: Props) {
             Patient details
           </h2>
           <button
+            ref={closeButtonRef}
             type="button"
             aria-label="Close"
             onClick={onClose}

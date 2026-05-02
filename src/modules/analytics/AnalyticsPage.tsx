@@ -6,6 +6,7 @@ import { DepartmentChart } from './DepartmentChart';
 import { AppointmentStatusChart } from './AppointmentStatusChart';
 import { appointmentStatus, departmentBreakdown, getAdmissionsSeries } from './mockData';
 import type { DateRange } from './types';
+import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
 const rangeOptions: SelectOption[] = [
   { value: '7d', label: 'Last 7 days' },
@@ -17,6 +18,7 @@ const rangeOptions: SelectOption[] = [
 export default function AnalyticsPage() {
   const [range, setRange] = useState<DateRange>('30d');
   const admissionsData = useMemo(() => getAdmissionsSeries(range), [range]);
+  useDocumentTitle('Analytics');
 
   const rangeSelect = (
     <div className="w-44">
