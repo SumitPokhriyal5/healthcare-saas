@@ -7,3 +7,4 @@ export { Toggle, type ToggleOption } from './Toggle';
 export { Skeleton } from './Skeleton';
 export { EmptyState } from './EmptyState';
 export { PageHeader } from './PageHeader';
+export { RouteFallback } from './RouteFallback';

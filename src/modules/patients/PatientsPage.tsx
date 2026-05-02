@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Users } from 'lucide-react';
 import { PageHeader, Card, EmptyState } from '@shared/components';
@@ -29,8 +29,11 @@ export default function PatientsPage() {
     [id, allPatients],
   );
 
-  const openPatient = (patientId: string) => navigate(`/patients/${patientId}`);
-  const closeDrawer = () => navigate('/patients');
+  const openPatient = useCallback(
+    (patientId: string) => navigate(`/patients/${patientId}`),
+    [navigate],
+  );
+  const closeDrawer = useCallback(() => navigate('/patients'), [navigate]);
 
   return (
     <div className="space-y-5">
@@ -47,7 +50,7 @@ export default function PatientsPage() {
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((p) => (
-            <PatientCard key={p.id} patient={p} onClick={() => openPatient(p.id)} />
+            <PatientCard key={p.id} patient={p} onSelect={openPatient} />
           ))}
         </div>
       ) : (
@@ -66,7 +69,7 @@ export default function PatientsPage() {
               </thead>
               <tbody>
                 {filtered.map((p) => (
-                  <PatientListRow key={p.id} patient={p} onClick={() => openPatient(p.id)} />
+                  <PatientListRow key={p.id} patient={p} onSelect={openPatient} />
                 ))}
               </tbody>
             </table>

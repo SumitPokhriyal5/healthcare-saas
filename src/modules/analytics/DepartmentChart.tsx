@@ -1,5 +1,6 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import type { DepartmentSlice } from './types';
+import { memo } from 'react';
 
 const COLORS = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
@@ -7,7 +8,7 @@ interface Props {
   data: DepartmentSlice[];
 }
 
-export function DepartmentChart({ data }: Props) {
+function DepartmentChartComponent({ data }: Props) {
   return (
     <div className="h-72 w-full">
       <ResponsiveContainer>
@@ -35,3 +36,5 @@ export function DepartmentChart({ data }: Props) {
     </div>
   );
 }
+
+export const DepartmentChart = memo(DepartmentChartComponent);

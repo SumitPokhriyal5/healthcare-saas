@@ -2,19 +2,21 @@ import { Badge } from '@shared/components';
 import { getInitials } from '@shared/utils/initials';
 import { statusMeta } from './statusMeta';
 import type { Patient } from '@shared/types/patient';
+import { memo } from 'react';
 
 interface Props {
   patient: Patient;
-  onClick: () => void;
+  onSelect: (id: string) => void;
 }
 
-export function PatientListRow({ patient, onClick }: Props) {
+function PatientListRowComponent({ patient, onSelect }: Props) {
   const status = statusMeta[patient.status];
+  const handleClick = () => onSelect(patient.id);
   return (
     <tr
-      onClick={onClick}
+      onClick={handleClick}
       onKeyDown={(e) => {
-        if (e.key === 'Enter') onClick();
+        if (e.key === 'Enter') handleClick();
       }}
       tabIndex={0}
       className="cursor-pointer border-b border-slate-100 transition-colors last:border-0 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
@@ -45,3 +47,5 @@ export function PatientListRow({ patient, onClick }: Props) {
     </tr>
   );
 }
+
+export const PatientListRow = memo(PatientListRowComponent);

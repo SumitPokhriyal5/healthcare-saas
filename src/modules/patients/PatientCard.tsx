@@ -3,23 +3,25 @@ import { Card, CardBody, Badge } from '@shared/components';
 import { getInitials } from '@shared/utils/initials';
 import { statusMeta } from './statusMeta';
 import type { Patient } from '@shared/types/patient';
+import { memo } from 'react';
 
 interface Props {
   patient: Patient;
-  onClick: () => void;
+  onSelect: (id: string) => void;
 }
 
-export function PatientCard({ patient, onClick }: Props) {
+function PatientCardComponent({ patient, onSelect }: Props) {
   const status = statusMeta[patient.status];
+  const handleClick = () => onSelect(patient.id);
   return (
     <Card
       role="button"
       tabIndex={0}
-      onClick={onClick}
+      onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onClick();
+          handleClick();
         }
       }}
       className="cursor-pointer transition-all hover:border-brand-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
@@ -57,3 +59,5 @@ export function PatientCard({ patient, onClick }: Props) {
     </Card>
   );
 }
+
+export const PatientCard = memo(PatientCardComponent);

@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { AppointmentStatusBucket } from './types';
+import { memo } from 'react';
 
 const COLORS = ['#10b981', '#2563eb', '#f59e0b', '#ef4444'];
 
@@ -7,7 +8,7 @@ interface Props {
   data: AppointmentStatusBucket[];
 }
 
-export function AppointmentStatusChart({ data }: Props) {
+function AppointmentStatusChartComponent({ data }: Props) {
   return (
     <div className="h-72 w-full">
       <ResponsiveContainer>
@@ -29,3 +30,5 @@ export function AppointmentStatusChart({ data }: Props) {
     </div>
   );
 }
+
+export const AppointmentStatusChart = memo(AppointmentStatusChartComponent);

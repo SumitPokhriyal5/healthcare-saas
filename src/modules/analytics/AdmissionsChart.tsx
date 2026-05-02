@@ -9,12 +9,13 @@ import {
   Legend,
 } from 'recharts';
 import type { AdmissionPoint } from './types';
+import { memo } from 'react';
 
 interface Props {
   data: AdmissionPoint[];
 }
 
-export function AdmissionsChart({ data }: Props) {
+function AdmissionsChartComponent({ data }: Props) {
   return (
     <div className="h-72 w-full">
       <ResponsiveContainer>
@@ -53,3 +54,5 @@ export function AdmissionsChart({ data }: Props) {
     </div>
   );
 }
+
+export const AdmissionsChart = memo(AdmissionsChartComponent);
