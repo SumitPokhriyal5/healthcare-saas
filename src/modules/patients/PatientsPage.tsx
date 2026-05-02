@@ -1,12 +1,80 @@
-import { PageHeader } from '@shared/components/PageHeader';
+import { useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Users } from 'lucide-react';
+import { PageHeader, Card, EmptyState } from '@shared/components';
+import { usePatientsStore, filterPatients } from '@lib/store/patientsStore';
+import { useUIStore } from '@lib/store/uiStore';
+import { mockPatients } from './mockData';
+import { PatientsFilterBar } from './PatientsFilterBar';
+import { PatientCard } from './PatientCard';
+import { PatientListRow } from './PatientListRow';
+import { PatientDetailDrawer } from './PatientDetailDrawer';
 
 export default function PatientsPage() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id?: string }>();
+  const setPatients = usePatientsStore((s) => s.setPatients);
+  const allPatients = usePatientsStore((s) => s.patients);
+  const filters = usePatientsStore((s) => s.filters);
+  const viewMode = useUIStore((s) => s.patientsViewMode);
+
+  useEffect(() => {
+    setPatients(mockPatients);
+  }, [setPatients]);
+
+  const filtered = useMemo(() => filterPatients(allPatients, filters), [allPatients, filters]);
+
+  const selectedPatient = useMemo(
+    () => (id ? (allPatients.find((p) => p.id === id) ?? null) : null),
+    [id, allPatients],
+  );
+
+  const openPatient = (patientId: string) => navigate(`/patients/${patientId}`);
+  const closeDrawer = () => navigate('/patients');
+
   return (
-    <div>
-      <PageHeader title="Patients" subtitle="Manage your patient list" />
-      <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-        Grid and list views will go here.
-      </div>
+    <div className="space-y-5">
+      <PageHeader title="Patients" subtitle={`${filtered.length} of ${allPatients.length} shown`} />
+
+      <PatientsFilterBar />
+
+      {filtered.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="No patients match your filters"
+          description="Try adjusting your search or clearing filters."
+        />
+      ) : viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((p) => (
+            <PatientCard key={p.id} patient={p} onClick={() => openPatient(p.id)} />
+          ))}
+        </div>
+      ) : (
+        <Card className="overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Name</th>
+                  <th className="hidden px-4 py-3 font-medium sm:table-cell">Age</th>
+                  <th className="hidden px-4 py-3 font-medium md:table-cell">Condition</th>
+                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Doctor</th>
+                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Last visit</th>
+                  <th className="px-4 py-3 text-right font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((p) => (
+                  <PatientListRow key={p.id} patient={p} onClick={() => openPatient(p.id)} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
+
+      <PatientDetailDrawer patient={selectedPatient} onClose={closeDrawer} />
     </div>
   );
 }

@@ -18,6 +18,7 @@ export default function AppRouter() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/patients" element={<PatientsPage />} />
+          <Route path="/patients/:id" element={<PatientsPage />} />
         </Route>
 
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

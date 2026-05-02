@@ -33,11 +33,10 @@ export const usePatientsStore = create<PatientsState>((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
 }));
 
-export const selectFilteredPatients = (state: PatientsState): Patient[] => {
-  const { search, status } = state.filters;
-  const q = search.trim().toLowerCase();
-  return state.patients.filter((p) => {
-    if (status !== 'all' && p.status !== status) return false;
+export function filterPatients(patients: Patient[], filters: PatientsFilters): Patient[] {
+  const q = filters.search.trim().toLowerCase();
+  return patients.filter((p) => {
+    if (filters.status !== 'all' && p.status !== filters.status) return false;
     if (!q) return true;
     return (
       p.name.toLowerCase().includes(q) ||
@@ -45,4 +44,4 @@ export const selectFilteredPatients = (state: PatientsState): Patient[] => {
       p.doctor.toLowerCase().includes(q)
     );
   });
-};
+}
