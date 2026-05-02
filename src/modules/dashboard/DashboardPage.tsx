@@ -4,6 +4,7 @@ import { KpiCard } from './KpiCard';
 import { ActivityFeed } from './ActivityFeed';
 import { QuickActions } from './QuickActions';
 import { kpiMetrics, recentActivity } from './mockData';
+import { NotificationsCard } from './NotificationsCard';
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
@@ -29,7 +30,8 @@ export default function DashboardPage() {
         <div className="lg:col-span-2">
           <ActivityFeed items={recentActivity} />
         </div>
-        <div>
+        <div className="space-y-6">
+          <NotificationsCard />
           <QuickActions />
         </div>
       </div>
