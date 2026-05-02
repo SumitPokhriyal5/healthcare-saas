@@ -9,6 +9,7 @@ const LoginPage = lazy(() => import('@modules/auth/LoginPage'));
 const DashboardPage = lazy(() => import('@modules/dashboard/DashboardPage'));
 const AnalyticsPage = lazy(() => import('@modules/analytics/AnalyticsPage'));
 const PatientsPage = lazy(() => import('@modules/patients/PatientsPage'));
+const SignupPage = lazy(() => import('@modules/auth/SignupPage'));
 
 export default function AppRouter() {
   return (
@@ -18,6 +19,7 @@ export default function AppRouter() {
           <Routes>
             <Route element={<PublicOnlyRoute />}>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
             </Route>
 
             <Route element={<ProtectedRoute />}>

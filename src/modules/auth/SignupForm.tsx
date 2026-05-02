@@ -1,27 +1,27 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input, Button } from '@shared/components';
 import { useAuthStore } from '@lib/store/authStore';
 import { useAuth } from './useAuth';
-import { loginSchema, type LoginFormValues } from './loginSchema';
+import { signupSchema, type SignupFormValues } from './signupSchema';
 import { GoogleButton } from './GoogleButton';
 import { AuthDivider } from './AuthDivider';
 
-type FieldErrors = Partial<Record<keyof LoginFormValues, string>>;
+type FieldErrors = Partial<Record<keyof SignupFormValues, string>>;
 
-interface LocationState {
-  from?: { pathname: string };
-}
-
-export default function LoginForm() {
+export default function SignupForm() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const isLoading = useAuthStore((s) => s.isLoading);
   const serverError = useAuthStore((s) => s.error);
   const setError = useAuthStore((s) => s.setError);
 
-  const [values, setValues] = useState<LoginFormValues>({ email: '', password: '' });
+  const [values, setValues] = useState<SignupFormValues>({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function LoginForm() {
     };
   }, [setError]);
 
-  const updateField = (field: keyof LoginFormValues, value: string) => {
+  const updateField = (field: keyof SignupFormValues, value: string) => {
     setValues((prev) => ({ ...prev, [field]: value }));
     if (fieldErrors[field]) {
       setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -38,34 +38,44 @@ export default function LoginForm() {
   };
 
   const redirectAfterAuth = () => {
-    const from = (location.state as LocationState | null)?.from?.pathname ?? '/dashboard';
-    navigate(from, { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const parsed = loginSchema.safeParse(values);
+    const parsed = signupSchema.safeParse(values);
     if (!parsed.success) {
       const errors: FieldErrors = {};
       for (const issue of parsed.error.issues) {
-        const field = issue.path[0] as keyof LoginFormValues;
+        const field = issue.path[0] as keyof SignupFormValues;
         if (!errors[field]) errors[field] = issue.message;
       }
       setFieldErrors(errors);
       return;
     }
 
-    const result = await login(parsed.data.email, parsed.data.password);
+    const result = await signup(parsed.data.name, parsed.data.email, parsed.data.password);
     if (result.ok) redirectAfterAuth();
   };
 
   return (
     <div>
-      <GoogleButton label="Continue with Google" onSuccess={redirectAfterAuth} />
+      <GoogleButton label="Sign up with Google" onSuccess={redirectAfterAuth} />
       <AuthDivider />
 
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
+        <Input
+          name="name"
+          type="text"
+          label="Full name"
+          placeholder="Dr. Aanya Sharma"
+          autoComplete="name"
+          value={values.name}
+          onChange={(e) => updateField('name', e.target.value)}
+          error={fieldErrors.name}
+          disabled={isLoading}
+        />
         <Input
           name="email"
           type="email"
@@ -82,10 +92,22 @@ export default function LoginForm() {
           type="password"
           label="Password"
           placeholder="••••••••"
-          autoComplete="current-password"
+          autoComplete="new-password"
           value={values.password}
           onChange={(e) => updateField('password', e.target.value)}
           error={fieldErrors.password}
+          hint={!fieldErrors.password ? '8+ chars, 1 uppercase, 1 number' : undefined}
+          disabled={isLoading}
+        />
+        <Input
+          name="confirmPassword"
+          type="password"
+          label="Confirm password"
+          placeholder="••••••••"
+          autoComplete="new-password"
+          value={values.confirmPassword}
+          onChange={(e) => updateField('confirmPassword', e.target.value)}
+          error={fieldErrors.confirmPassword}
           disabled={isLoading}
         />
 
@@ -99,17 +121,17 @@ export default function LoginForm() {
         )}
 
         <Button type="submit" isLoading={isLoading} className="w-full">
-          {isLoading ? 'Signing in...' : 'Sign in'}
+          {isLoading ? 'Creating account...' : 'Create account'}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-slate-500">
-        Don't have an account?{' '}
+        Already have an account?{' '}
         <Link
-          to="/signup"
+          to="/login"
           className="font-medium text-brand-600 hover:text-brand-700 hover:underline"
         >
-          Create one
+          Sign in
         </Link>
       </p>
     </div>

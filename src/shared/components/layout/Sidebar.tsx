@@ -27,6 +27,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
+
   return (
     <>
       {isOpen && (
