@@ -5,8 +5,10 @@ import { ActivityFeed } from './ActivityFeed';
 import { QuickActions } from './QuickActions';
 import { kpiMetrics, recentActivity } from './mockData';
 import { NotificationsCard } from './NotificationsCard';
+import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
 export default function DashboardPage() {
+  useDocumentTitle('Dashboard');
   const user = useAuthStore((s) => s.user);
   const greetingName = user?.displayName ?? user?.email?.split('@')[0] ?? 'there';
 
